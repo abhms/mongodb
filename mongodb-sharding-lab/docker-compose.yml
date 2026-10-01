@@ -1,0 +1,84 @@
+services:
+
+  # -------------------------
+  # SHARD 1 - Replica Set
+  # -------------------------
+
+  shard1a:
+    image: mongo:8
+    container_name: shard1a
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    ports:
+      - "27021:27017"
+
+  shard1b:
+    image: mongo:8
+    container_name: shard1b
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    ports:
+      - "27024:27017"
+
+  shard1c:
+    image: mongo:8
+    container_name: shard1c
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    ports:
+      - "27025:27017"
+
+
+  # -------------------------
+  # SHARD 2 - Replica Set
+  # -------------------------
+
+  shard2a:
+    image: mongo:8
+    container_name: shard2a
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    ports:
+      - "27022:27017"
+
+  shard2b:
+    image: mongo:8
+    container_name: shard2b
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    ports:
+      - "27026:27017"
+
+  shard2c:
+    image: mongo:8
+    container_name: shard2c
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    ports:
+      - "27027:27017"
+
+
+  # -------------------------
+  # CONFIG SERVER
+  # -------------------------
+
+  config:
+    image: mongo:8
+    container_name: config
+    command: mongod --configsvr --replSet configRS --port 27017 --bind_ip_all
+    ports:
+      - "27023:27017"
+
+
+  # -------------------------
+  # MONGOS ROUTER
+  # -------------------------
+
+  mongos:
+    image: mongo:8
+    container_name: mongos
+    depends_on:
+      - config
+      - shard1a
+      - shard1b
+      - shard1c
+      - shard2a
+      - shard2b
+      - shard2c
+    command: mongos --configdb configRS/config:27017 --bind_ip_all
+    ports:
+      - "27020:27017"
