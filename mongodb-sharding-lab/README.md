@@ -48,7 +48,28 @@ docker exec -i mongos mongosh < scripts/seed-data.js
 
 ---
 
-## 3. In-Depth Documentation
+## 3. Authentication & Security
+
+This cluster is configured to require authentication. To enable this securely between nodes, we use a shared `mongo-keyfile` generated and mapped into all 8 containers.
+
+### Keyfile Setup (Done)
+1. **Generate the keyfile**:
+   ```bash
+   openssl rand -base64 756 > data/mongo-keyfile
+   chmod 400 data/mongo-keyfile
+   ```
+2. **Configuration**: The `docker-compose.yml` mounts this file to `/data/mongo-keyfile` and starts all processes with the `--keyFile` flag, which inherently enables `--auth`.
+3. **Security**: `mongo-keyfile` is added to `.gitignore` so the sensitive key is never committed to source control.
+
+### Connecting with Auth
+To connect securely from your terminal or Compass:
+```text
+mongodb://admin:StrongAdminPassword@localhost:27020/admin?authSource=admin
+```
+
+---
+
+## 4. In-Depth Documentation
 
 For the full hands-on walkthroughs and conceptual deep-dives, see:
 - [`docs/architecture.md`](docs/architecture.md) — Comprehensive visual topology and data flow.
@@ -57,7 +78,7 @@ For the full hands-on walkthroughs and conceptual deep-dives, see:
 
 ---
 
-## 4. Teardown
+## 5. Teardown
 ```bash
 docker compose down -v
 ```

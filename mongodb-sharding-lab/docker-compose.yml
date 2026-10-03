@@ -7,21 +7,27 @@ services:
   shard1a:
     image: mongo:8
     container_name: shard1a
-    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27021:27017"
 
   shard1b:
     image: mongo:8
     container_name: shard1b
-    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27024:27017"
 
   shard1c:
     image: mongo:8
     container_name: shard1c
-    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard1RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27025:27017"
 
@@ -33,21 +39,27 @@ services:
   shard2a:
     image: mongo:8
     container_name: shard2a
-    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27022:27017"
 
   shard2b:
     image: mongo:8
     container_name: shard2b
-    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27026:27017"
 
   shard2c:
     image: mongo:8
     container_name: shard2c
-    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all
+    command: mongod --shardsvr --replSet shard2RS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27027:27017"
 
@@ -59,7 +71,9 @@ services:
   config:
     image: mongo:8
     container_name: config
-    command: mongod --configsvr --replSet configRS --port 27017 --bind_ip_all
+    command: mongod --configsvr --replSet configRS --port 27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27023:27017"
 
@@ -79,6 +93,8 @@ services:
       - shard2a
       - shard2b
       - shard2c
-    command: mongos --configdb configRS/config:27017 --bind_ip_all
+    command: mongos --configdb configRS/config:27017 --bind_ip_all --keyFile /data/mongo-keyfile
+    volumes:
+      - ./data/mongo-keyfile:/data/mongo-keyfile
     ports:
       - "27020:27017"

@@ -1,0 +1,11 @@
+# Ignore MongoDB Keyfiles (Security)
+mongo-keyfile
+*.keyfile
+data/mongo-keyfile
+
+# Ignore database data directories
+*/data/*
+!*/data/.gitkeep
+
+# Ignore macOS custom attributes
+.DS_Store
